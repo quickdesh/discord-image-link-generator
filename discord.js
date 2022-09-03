@@ -1,9 +1,17 @@
 const Discord = require('discord.js')
-const discordVars = require('./discord_vars.json')
-
-fs = require('fs')
-
+const fs = require('fs')
 const discordLinksJson = require('./discord_links.json')
+
+let token, channelId
+
+try {
+    const discordVars = require('./discord_vars.json')
+    channelId = discordVars.CHANNELID
+    token = discordVars.TOKEN
+} catch {
+    channelId = process.env.CHANNELID
+    token = process.env.TOKEN
+}
 
 const client = new Discord.Client({ intents: [Discord.GatewayIntentBits.Guilds, Discord.GatewayIntentBits.MessageContent] })
 
@@ -11,7 +19,7 @@ let linkChannel
 
 client.on("ready", async () => {
   console.log(`Logged in as ${client.user.tag}!`)
-  linkChannel = await client.channels.cache.get(discordVars.CHANNELID)
+  linkChannel = await client.channels.cache.get(channelId)
 
 })
 
@@ -43,6 +51,6 @@ async function getDiscordLink(imageLink){
 
 }
   
-client.login(discordVars.TOKEN)
+client.login(token)
 
 module.exports = { getDiscordLink }
