@@ -1,12 +1,22 @@
-const express = require('express'); //Import the express dependency
-const app = express();              //Instantiate an express app, the main work horse of this server
-const port = 5000;                  //Save the port number where your server will be listening
+const express = require('express')//Import the express dependency
+const app = express()            //Instantiate an express app, the main work horse of this server
+const port = process.env.PORT || 5000                //Save the port number where your server will be listening
 const discord = require('./discord.js')
+fs = require('fs')
+
 
 //Idiomatic expression in express to route and respond to a client request
-app.get('/DiscordImageLinkGenerator', (req, res) => {        //get requests to the root ("/") will route here
+app.get('/', (req, res) => {        //get requests to the root ("/") will route here
     res.sendFile('index.html', {root: __dirname});      //server responds by sending the index.html file to the client's browser
                                                         //the .sendFile method needs the absolute path to the file, see: https://expressjs.com/en/4x/api.html#res.sendFile 
+});
+
+app.get('/json', (req, res) => {
+  fs.readFile('discord_links.json', 'utf8', function (err, data) {
+    if (err) throw err;
+    obj = JSON.parse(data);
+    res.send(JSON.stringify(obj, null, "\n\n"));
+  })
 });
 
 app.use(express.urlencoded({
@@ -17,7 +27,7 @@ app.listen(port, () => {            //server starts listening for any attempts f
   console.log(`Now listening on port ${port}`); 
 });
 
-app.post('/DiscordImageLinkGenerator/GeneratedLink', async (req, res) => {
+app.post('/link', async (req, res) => {
   const imageLink = req.body.imageLink
 
   let embedLink = await discord.getDiscordLink(imageLink)
