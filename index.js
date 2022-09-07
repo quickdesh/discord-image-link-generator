@@ -27,8 +27,8 @@ app.listen(port, () => {            //server starts listening for any attempts f
   console.log(`Now listening on port ${port}`); 
 });
 
-app.post('/link', async (req, res) => {
-  const imageLink = req.body.imageLink
+app.get('/link', async (req, res) => {
+  const imageLink = req.url.split("?imageLink=")[1].replace(/%3A/g,":").replace(/%2F/g,"/")
 
   let embedLink = await discord.getDiscordLink(imageLink)
   
