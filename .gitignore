@@ -3,3 +3,4 @@ npm-debug.log
 .DS_Store
 /*.env
 discord_vars.json
+discord_links.json

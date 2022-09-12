@@ -32,6 +32,8 @@ app.get('/link', async (req, res) => {
 
   let embedLink = await discord.getDiscordLink(imageLink)
   
+  res.set('discord-image-link', embedLink)
+  res.set('Access-Control-Expose-Headers', 'discord-image-link')
   res.send(`<html> <head>Discord Image Link</head><body><h3>${embedLink}</h3></body></html>`)
   res.end()
 })
